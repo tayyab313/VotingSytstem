@@ -1,0 +1,88 @@
+<?php
+
+namespace App\Imports;
+
+// use App\Models\SystemElectionCandidate;
+use App\Models\Electionsinformation;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Maatwebsite\Excel\Concerns\WithValidation;
+use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+use Maatwebsite\Excel\Validators\Failure;
+
+use Mail;
+use Auth;
+class ElectionCandidateImport implements ToModel, WithHeadingRow, WithValidation,
+SkipsOnFailure
+{
+    /**
+    * @param array $row
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null
+    */
+    public function model(array $row)
+    {
+        // dd($row);
+        // $this->mailToCandiddate($row['email'],$row['name']);
+        $circunData =  $row['urbanrural'];
+        return new Electionsinformation([
+            'state_code'          => $row['state_code'],
+            'state_name'         => $row['state_name'], 
+            'city_code'         => $row['city_code'], 
+            'city_name'      => $row['city_name'], 
+            'parroquia_code'         => $row['parroquia_code'], 
+            'parroquia_name'          => $row['parroquia_name'], 
+            'Circunscripcion'     => $circunData, 
+            'zone_code'     => $row['zone_code'], 
+            'zone_name' => $row['zone_name'],
+            'zone_voters' => $row['zone_voters'],
+            'male_voters' => $row['male_voters'],
+            'female_voters' => $row['female_voters'],
+            'zone_tables' => $row['zone_tables'],
+            'male_tables' => $row['male_tables'],
+            'female_tables' => $row['female_tables'],
+            'voters_per_table' => $row['voters_per_table'],
+        ]);
+        // return new SystemElectionCandidate([
+        //     'name'          => $row['name'],
+        //     'email'         => $row['email'], 
+        //     'phone'         => $row['phone'], 
+        //     'position'      => $row['position'], 
+        //     'state'         => $row['provincia'], 
+        //     'city'          => $row['canton'], 
+        //     'parroquia'     => $row['parroquia'], 
+        //     'political_party'     => $row['political_party'], 
+        //     // 'img_pol_party' => $row['image_political_party'], 
+        //     'password'      => '123123123',
+        //     'election_id'   => session()->get('electionId'),
+        // ]);
+        
+        
+    }
+    public function mailToCandiddate($email='',$name='')
+    {
+        $maildata = [
+            'name' => $name,
+            'email' => $email,
+            'password' => '123123123',
+            'click' =>'Login by using this email and password',
+            'data' => 'You are added In Our Voting System by this '.$email . ' email address',
+        ];
+        $user['to'] = $name;
+        Mail::send('mail',$maildata,function($messages) use ($email)
+        {
+            $messages->to($email);
+            $messages->subject('Dear Candidate Welcome to our Voto Control system');
+        });
+    }
+    public function rules():array
+    {
+        return [
+            '*.email' => ['email', 'unique:system_election_candidates,email']
+        ];
+    }
+    public function onFailure(Failure ...$failures)
+    {
+        
+    }
+}
