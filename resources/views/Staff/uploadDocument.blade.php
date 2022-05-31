@@ -96,9 +96,9 @@
                                     <select id="circun" class="form-control" name="circun">
                                         <option disabled selected >Choose...</option>
                                         <!-- <option value="circun">Circun</option> -->
-                                        <option value="U">U</option>
-                                        <option value="R">R</option>
-                                        <option value="E">E</option>
+                                        <option value="U">URBANO</option>
+                                        <option value="R">RURAL</option>
+                                        <option value="E">EXTERIOR</option>
                                     </select>
                                     @error('circun')
                                         <span class="text-danger" role="alert">

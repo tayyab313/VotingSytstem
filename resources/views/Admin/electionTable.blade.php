@@ -129,10 +129,7 @@
               <div class="form-group col-12">
                 <label for="canton" class="">Canton</label>
                 <select id="canton" name="canton" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="canto">Canto</option>
-                  <option value="cantcao">Cantcao</option>
-                  <option value="canto juanid">Canto juanid</option>
+                  <option value='null' selected>Choose...</option>
                 </select>
               </div>
             </div>
@@ -140,10 +137,7 @@
               <div class="form-group col-12">
                 <label for="parroquia" class="">Parroquia</label>
                 <select id="parroquia" name="parroquia" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="parroquia">Parroquia</option>
-                  <option value="parroqcacauia">Parroqcacauia</option>
-                  <option value="parroquia junaid">Parroquia junaid</option>
+                  <option value='null' selected>Choose...</option>
                 </select>
               </div>
             </div>
@@ -151,10 +145,7 @@
             <div class="form-group col-12">
                 <label for="zona" class="">Zona</label>
                 <select id="zona" name="zona" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="zona">Zona</option>
-                  <option value="zoacna">zoacna</option>
-                  <option value="zona junaid">Zona junaid</option>
+                  <option value='null' selected>Choose...</option>
                 </select>
               </div>  
             </div>
@@ -162,10 +153,10 @@
             <div class="form-group col-12">
                 <label for="circun" class="">Circunscripcion</label>
                 <select id="circun" name="circun" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="U">U</option>
-                  <option value="R">R</option>
-                  <option value="E">E</option>
+                  <option value='null' selected>Choose...</option>
+                  <option value="URBANO">URBANO</option>
+                  <option value="RURAL">RURAL</option>
+                  <option value="EXTERIOR">EXTERIOR</option>
                 </select>
               </div> 
             
@@ -214,6 +205,7 @@
 
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
+      <div class="alert alert-danger mx-auto" style="width: 97%;">Duplicate Data will be  Ignored by the System Automatically</div>
       <div class="modal-body">
         <!-- Form -->
         <form method='post' action='{{ route('importElectiontable') }}' enctype="multipart/form-data">
@@ -404,7 +396,7 @@
 
 
 
-    $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[name="circun"],select[name="junta_no"]').attr('disabled','disabled');  
+    // $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[name="circun"],select[name="junta_no"]').attr('disabled','disabled');  
     console.log('sssasas');
     $('select[name=provincia]').on('change', function() {
       console.log('sss');
@@ -418,7 +410,7 @@
         },
         success: function(result) {
           // $.LoadingOverlay("hide");
-          html = "";
+          html = '<option  value="null" selected>Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.city_name +'">' + value.city_name +'</option>';
             });
@@ -448,7 +440,7 @@
         success: function(result) {
           console.log(result);
            // $.LoadingOverlay("hide");
-            html = "";
+            html = '<option value="null" selected>Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.parroquia_name +'">' + value.parroquia_name +'</option>';
             });
@@ -480,11 +472,11 @@
         success: function(result) {
            // $.LoadingOverlay("hide");
            console.log(result.data[0].zone_name);
-           var html = "";
+           var html = '<option value="null" selected>Choose...</option>';
+
            if(result.data[0].zone_name == 'null' || result.data[0].zone_name == null)
            {
-             console.log('inside if ');
-            html = "<option  value='null'>Empty</option>";
+            html += "<option  value='null'>Empty</option>";
             console.log(html);
             $('select[name=zona]').html(html);
            }

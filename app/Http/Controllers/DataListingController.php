@@ -33,6 +33,7 @@ class DataListingController extends Controller
      */
     public function DataListing(Request $request)
     {
+        // dd($request->all());
         $positons = Position::all();
         $getSTatVal = Electionsinformation::select(\DB::raw("DISTINCT(state_name)"))->get();
         $request->validate([
@@ -88,7 +89,7 @@ class DataListingController extends Controller
         // dd($graph_candidates_name_array2);
      // Get Invalid docs
      $docs_invalid = Document::select(\DB::raw("count(*) as invalid,(valid_votes+null_votes+blank_votes) as votes,total_votes"))->whereIn('document.id', $doc_ids_Arr)->whereRaw("1=1 having votes > total_votes")->get();
-     $invalid_docs = empty($docs_invalid[0]->invalid) ? 0 : $docs_invalid[0]>invalid;
+     $invalid_docs = empty($docs_invalid[0]->invalid) ? 0 : $docs_invalid[0]->invalid;
     //  dd($invalid_docs);
      // Get Valid docs
     //    \DB::enableQueryLog(); // Enable query log

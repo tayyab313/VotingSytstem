@@ -35,17 +35,22 @@ class StaffUsersImport implements ToModel, WithHeadingRow
         //               ]);
         //     } 
         // // }
-        return new User([
-            'name'     => $row['name'],
-            'email'    => $row['email'], 
-            'phone'    => $row['phone'], 
-            'position'    => $row['position'], 
-            'state'    => $row['provincia'], 
-            'city'    => $row['canton'], 
-            'parroquia'    => $row['parroquia'], 
-            'password' => '$2y$10$cvYnUuEw4IDGUvWzX4pmw.nJPpiL66smo.J.HUByLbjN1.AphCpL2',
-            'role' => 'Staff',
+        $StaffData = User::where('email',$row['email'])->first();
+        if($StaffData == null || empty($StaffData))
+        {
+            return new User([
+                'name'     => $row['name'],
+                'email'    => $row['email'], 
+                'phone'    => $row['phone'], 
+                'position'    => $row['position'], 
+                'state'    => $row['provincia'], 
+                'city'    => $row['canton'], 
+                'parroquia'    => $row['parroquia'], 
+                'password' => '$2y$10$cvYnUuEw4IDGUvWzX4pmw.nJPpiL66smo.J.HUByLbjN1.AphCpL2',
+                'role' => 'Staff',
 
-        ]);
+            ]);
+        }
+        
     }
 }

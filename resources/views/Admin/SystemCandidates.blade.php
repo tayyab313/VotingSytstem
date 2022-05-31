@@ -364,7 +364,7 @@
               <div class="form-group col-12">
                 <label for="provincia" class="">Provincia</label>
                 <select id="provincia" name="provincia" class="form-control">
-                  <option disabled selected>Choose...</option>
+                  <option value="null" selected>Choose...</option>
                   @foreach ($getSTatVal as $getSTatVals)
                   <option value="{{$getSTatVals['state_name']}}">{{$getSTatVals['state_name']}}</option>
                     
@@ -376,10 +376,8 @@
               <div class="form-group col-12">
                 <label for="canton" class="">Canton</label>
                 <select id="canton" name="canton" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="canto">Canto</option>
-                  <option value="cantcao">Cantcao</option>
-                  <option value="canto juanid">Canto juanid</option>
+                  <option value="null" selected>Choose...</option>
+                 
                 </select>
               </div>
             </div>
@@ -387,10 +385,8 @@
               <div class="form-group col-12">
                 <label for="parroquia" class="">Parroquia</label>
                 <select id="parroquia" name="parroquia" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="parroquia">Parroquia</option>
-                  <option value="parroqcacauia">Parroqcacauia</option>
-                  <option value="parroquia junaid">Parroquia junaid</option>
+                  <option value="null" selected>Choose...</option>
+                 
                 </select>
               </div>
             </div>
@@ -416,6 +412,7 @@
 
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
+      <div class="alert alert-danger mx-auto" style="width: 97%;">Duplicate Emails will be  Ignored by the System Automatically</div>
       <div class="modal-body">
         @if(isset($errors) && $errors->any())
         <div class="alert alert-danger" >
@@ -780,6 +777,7 @@
         contentType: false,
         processData: false,
         success: function(response) {
+          console.log(response);
           $.LoadingOverlay("hide");
 
           if (response.errors) {
@@ -791,7 +789,7 @@
                 'Your File is Imported Successfully!',
                 'success'
                 )
-            location.reload();
+            // location.reload();
             }
 
         }
@@ -853,7 +851,7 @@
       var form = $('#filterForm').serialize();
       $.LoadingOverlay("show");
       $('#filterForm')[0].reset();
-    $('select[name="Canton"],select[name="parroquia"]').attr('disabled','disabled');
+    // $('select[name="Canton"],select[name="parroquia"]').attr('disabled','disabled');
       $.ajax({
         type: "GET",
         url: "{{ route('systemCandidates',['param'=>true])}}",
@@ -918,7 +916,7 @@
       });
     });
 
-    $('select[name="city"],select[name="parroquia"],select[name="zona"],select[name="circun"],select[name="junta_no"]').attr('disabled','disabled');  
+    // $('select[name="city"],select[name="parroquia"],select[name="zona"],select[name="circun"],select[name="junta_no"]').attr('disabled','disabled');  
     $('select[name=state]').on('change', function() {
       var getValueOption = this.value;
       // $.LoadingOverlay("show");
@@ -930,7 +928,7 @@
         },
         success: function(result) {
           // $.LoadingOverlay("hide");
-          html = "";
+          var html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.city_name +'">' + value.city_name +'</option>';
             });
@@ -960,7 +958,7 @@
         },
         success: function(result) {
            // $.LoadingOverlay("hide");
-            html = "";
+            var html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.parroquia_name +'">' + value.parroquia_name +'</option>';
             });
@@ -992,7 +990,7 @@
         success: function(result) {
            // $.LoadingOverlay("hide");
            console.log(result.data[0].zone_name);
-           var html = "";
+           var  html ='<option value="null">Choose...</option>';
            if(result.data[0].zone_name == 'null' || result.data[0].zone_name == null)
            {
              console.log('inside if ');
@@ -1020,7 +1018,7 @@
     // $('.drag_drop_file').click(()=>{
     //     $('.drag_drop_file > input#drag_drop_field').click();
     // });
-    $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[name="circun"],select[name="junta_no"]').attr('disabled','disabled');  
+    // $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[name="circun"],select[name="junta_no"]').attr('disabled','disabled');  
     console.log('sssasas');
     $('select[name=provincia]').on('change', function() {
       console.log('sss');
@@ -1034,7 +1032,7 @@
         },
         success: function(result) {
           // $.LoadingOverlay("hide");
-          html = "";
+          var  html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.city_name +'">' + value.city_name +'</option>';
             });
@@ -1064,7 +1062,7 @@
         success: function(result) {
           console.log(result);
            // $.LoadingOverlay("hide");
-            html = "";
+           var  html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.parroquia_name +'">' + value.parroquia_name +'</option>';
             });
@@ -1096,7 +1094,7 @@
         success: function(result) {
            // $.LoadingOverlay("hide");
            console.log(result.data[0].zone_name);
-           var html = "";
+           var  html ='<option value="null">Choose...</option>';
            if(result.data[0].zone_name == 'null' || result.data[0].zone_name == null)
            {
              console.log('inside if ');
@@ -1148,13 +1146,13 @@
            // $.LoadingOverlay("hide");
            var femaleVoter = (result.data[0].female_voters) ?result.data[0].female_voters : null;
            var MaleVoter = result.data[0].male_voters;
-           var html = "";
+           var  html ='<option value="null">Choose...</option>';
            for (let i = 1; i <= femaleVoter; i++) {
                 html += '<option  value="'+ i+'F'+'">' + i+'F' +'</option>';
             }
             $('select[name=junta_no]').append(html);
 
-          var Malehtml = "";
+          var Malehtml ='';
            for (let i = 1; i <= MaleVoter; i++) {
               Malehtml += '<option  value="'+ i+'M'+'">' + i+'M' +'</option>';
             }
@@ -1181,7 +1179,7 @@
         },
         success: function(result) {
           // $.LoadingOverlay("hide");
-          html = "";
+          var html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.city_name +'">' + value.city_name +'</option>';
             });
@@ -1211,7 +1209,7 @@
         },
         success: function(result) {
            // $.LoadingOverlay("hide");
-            html = "";
+           var html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.parroquia_name +'">' + value.parroquia_name +'</option>';
             });
@@ -1243,7 +1241,7 @@
         success: function(result) {
            // $.LoadingOverlay("hide");
            console.log(result.data[0].zone_name);
-           var html = "";
+           var  html ='<option value="null">Choose...</option>';
            if(result.data[0].zone_name == 'null' || result.data[0].zone_name == null)
            {
              console.log('inside if ');

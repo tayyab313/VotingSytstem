@@ -7,14 +7,10 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
 use Maatwebsite\Excel\Concerns\WithValidation;
 use Auth;
-use Maatwebsite\Excel\Concerns\SkipsOnFailure;
-use Maatwebsite\Excel\Validators\Failure;
+// use Maatwebsite\Excel\Concerns\SkipsOnFailure;
+// use Maatwebsite\Excel\Validators\Failure;
 
-class UsersImport implements 
-    ToModel,
-    WithHeadingRow, 
-    WithValidation,
-    SkipsOnFailure
+class UsersImport implements  ToModel,WithHeadingRow
 {
     /**
     * @param array $row
@@ -23,30 +19,36 @@ class UsersImport implements
     */
     public function model(array $row)
     {
-        // dd($row);
-        return new User([
-            'name'     => $row['name'],
-            'email'    => $row['email'], 
-            'phone'    => $row['phone'], 
-            'position'    => $row['position'], 
-            'state'    => $row['provincia'], 
-            'city'    => $row['canton'], 
-            'parroquia'    => $row['parroquia'], 
-            'pol_party'    => $row['political_party'], 
-            // 'img_pol_party'    => $row['image_political_party'], 
-            'password' => '123123123',
-            'role' => 'Candidate',
+        
+        $useData  = User::where('email',$row['email'])->first();
+        // dd($useData);
+        if($useData ==null || empty($useData))
+        {
+            return new User([
+                'name'     => $row['name'],
+                'email'    => $row['email'], 
+                'phone'    => $row['phone'], 
+                'position'    => $row['position'], 
+                'state'    => $row['provincia'], 
+                'city'    => $row['canton'], 
+                'parroquia'    => $row['parroquia'], 
+                'pol_party'    => $row['political_party'], 
+                // 'img_pol_party'    => $row['image_political_party'], 
+                'password' => '$2y$10$cvYnUuEw4IDGUvWzX4pmw.nJPpiL66smo.J.HUByLbjN1.AphCpL2',
+                'role' => 'Candidate',
 
-        ]);
-    }
-     public function rules():array
-    {
-        return [
-            '*.email' => ['email', 'unique:users,email']
-        ];
-    }
-    public function onFailure(Failure ...$failures)
-    {
+            ]);
+        }
         
     }
+    //  public function rules():array
+    // {
+    //     return [
+    //         '*.email' => ['email', 'unique:users,email']
+    //     ];
+    // }
+    // public function onFailure(Failure ...$failures)
+    // {
+        
+    // }
 }

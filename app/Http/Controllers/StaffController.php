@@ -47,37 +47,62 @@ class StaffController extends Controller
         if($param == '1')
         {
             $data = $request->all();
-            $validator = Validator::make($data, [
-                'Position'         => 'required',
-                'Canton'            => 'required',
-                'provincia'             => 'required',
-                'parroquia'        => 'required',
+            // $validator = Validator::make($data, [
+            //     'Position'         => 'required',
+            //     'Canton'            => 'required',
+            //     'provincia'             => 'required',
+            //     'parroquia'        => 'required',
     
-            ]);
-            if ($validator->fails()) {
-                // dd('stop');
-                return response()->json(['errors' => $validator->errors()->all()]);
-            }
-            else{
+            // ]);
+            // if ($validator->fails()) {
+            //     // dd('stop');
+            //     return response()->json(['errors' => $validator->errors()->all()]);
+            // }
+            // else{
                 
             // dd($param);
             $query ='';
             // dd($request->all());
             if($request->has('Position'))
             {
-                $query .=" and position = '$request->Position'";
+                if($request['Position'] == 'null')
+                {
+                    $request['Position'] = null; 
+
+                }else{
+                    $query .=" and position = '$request->Position'";
+                }
             }
             if($request->has('provincia'))
             {
-                $query .=" and state =  '$request->provincia'";
+                if($request['provincia'] == 'null')
+                {
+                    $request['provincia'] = null; 
+
+                }else{
+                    $query .=" and state =  '$request->provincia'";
+                }
             }
             if($request->has('Canton'))
             {
-                $query .=" and city =  '$request->Canton'";
+                if($request['Canton'] == 'null')
+                {
+                    $request['Canton'] = null; 
+
+                }else{
+                    $query .=" and city =  '$request->Canton'";
+                }
             }
             if($request->has('parroquia'))
             {
-                $query .=" and parroquia =  '$request->parroquia'";
+                if($request['parroquia'] == 'null')
+                {
+                    $request['parroquia'] = null; 
+
+                }else{
+                    $query .=" and parroquia =  '$request->parroquia'";
+                }
+                $query .=" and role =  'Staff'";
             }
             // dd($query);
             $staffmember = DB::select('select * from users where 1=1 '.$query);
@@ -91,9 +116,10 @@ class StaffController extends Controller
                 return response()->json([
                     'data' => $staffmember
                   ]);
-            }
-
+            
         }
+
+        // }
         else
         {
             $User = User::where('role', '=', 'Staff')->get();

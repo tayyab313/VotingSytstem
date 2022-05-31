@@ -96,38 +96,64 @@ class AdminController extends Controller
         {
             $data = $request->all();
             // dd($data);
-            $validator = Validator::make($data, [
-                'Position'         => 'required',
-                'provincia'            => 'required',
-                'canton'             => 'required',
-                'parroquia'        => 'required',
+            // $validator = Validator::make($data, [
+            //     'Position'         => 'required',
+            //     'provincia'            => 'required',
+            //     'canton'             => 'required',
+            //     'parroquia'        => 'required',
     
-            ]);
-            if ($validator->fails()) {
-                // dd('stop');
-                return response()->json(['errors' => $validator->errors()->all()]);
-            }
-            else{
+            // ]);
+            // if ($validator->fails()) {
+            //     // dd('stop');
+            //     return response()->json(['errors' => $validator->errors()->all()]);
+            // }
+            // else{
             $query ='';
             // dd($request->all());
             if($request->has('Position'))
             {
-                $query .=" and position = '$request->Position'";
+                if($request['Position'] == 'null')
+                {
+                    $request['Position'] = null; 
+
+                }else{
+                    $query .=" and position = '$request->Position'";
+                }
             }
             if($request->has('provincia'))
             {
-                $query .=" and state =  '$request->provincia'";
+                if($request['provincia'] == 'null')
+                {
+                    $request['provincia'] = null; 
+
+                }else{
+                    $query .=" and state =  '$request->provincia'";
+
+                }
             }
             if($request->has('canton'))
             {
-                $query .=" and city =  '$request->canton'";
+                if($request['canton'] == 'null')
+                {
+                    $request['canton'] = null; 
+
+                }else{
+                    // $query .=" and state =  '$request->provincia'";
+                    $query .=" and city =  '$request->canton'";
+                }
             }
             if($request->has('parroquia'))
             {
-                $query .=" and parroquia =  '$request->parroquia'";
+                if($request['parroquia'] == 'null')
+                {
+                    $request['parroquia'] = null; 
+
+                }else{
+                    $query .=" and parroquia =  '$request->parroquia'";
+                }
                 $query .=" and role =  'candidate'";
             }
-           
+        //    dd($query);
             $systemCandidates = DB::select('select * from users where 1=1 '.$query);
             if(empty($systemCandidates))
             {
@@ -139,9 +165,9 @@ class AdminController extends Controller
                 return response()->json([
                     'data' => $systemCandidates
                   ]);
-            }
-
+            
         }
+        // // }
         else
         {
 
@@ -151,6 +177,7 @@ class AdminController extends Controller
                 ->get();
         }
         return view('Admin.systemCandidates',compact('systemCandidates','positons','getSTatVal'));
+
     }
 
 
@@ -522,6 +549,7 @@ class AdminController extends Controller
         $validator = \Validator::make($request->all(), [
             'file'          => 'required|file|mimes:xls,xlsx',
         ]);
+        // dd($request->all(),$validator);
         if ($validator->fails())
         {
             return response()->json(['errors'=>$validator->errors()->all()]);

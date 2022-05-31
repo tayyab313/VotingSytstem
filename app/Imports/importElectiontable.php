@@ -17,18 +17,31 @@ class importElectiontable implements ToModel, WithHeadingRow
     public function model(array $row)
     {
         $circunData =  $row['circunscripcion'];
-        return new ElectionDetails([
-            'provincia'          => $row['provincia'],
-            'canton'             => $row['canton'],
-            'parroquia'          => $row['parroquia'],
-            'circun'             => $circunData,
-            'zona'               => $row['zona'],
-            'junta_no'           => $row['junta_no'],
-            'voters'             => $row['voters'],
-            'added_by'           => Auth::user()->id,
-            'status'             => 'active',
-            'election_id'        => session()->get('electionId'),
-        ]);
+        $tableData = ElectionDetails::where([
+            'provincia'     => $row['provincia'],
+            'canton'     => $row['canton'],
+            'parroquia' => $row['parroquia'],
+            'circun' => $circunData,
+            'zona' => $row['zona'],
+            'junta_no' => $row['junta_no'],
+            'voters' => $row['voters'],
+        ])->first();
+        if($tableData == null || empty($tableData))
+        {
+            return new ElectionDetails([
+                'provincia'          => $row['provincia'],
+                'canton'             => $row['canton'],
+                'parroquia'          => $row['parroquia'],
+                'circun'             => $circunData,
+                'zona'               => $row['zona'],
+                'junta_no'           => $row['junta_no'],
+                'voters'             => $row['voters'],
+                'added_by'           => Auth::user()->id,
+                'status'             => 'active',
+                'election_id'        => session()->get('electionId'),
+            ]);
+        }
+        
         
         
     }

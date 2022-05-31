@@ -38,44 +38,92 @@ class InviteController extends Controller
             $query = '';
             $data = $request->all();
             // dd($data);
-            $validator = Validator::make($data, [
-                'provincia'         => 'required',
-                'canton'            => 'required',
-                'circun'   => 'required',
-                'parroquia'         => 'required',
-                'zona'              => 'required',
-                'junta_no'          => 'required',
-                'voters'            => 'required',
+            
+            // $validator = Validator::make($data, [
+            //     'provincia'         => 'required',
+            //     'canton'            => 'required',
+            //     'circun'   => 'required',
+            //     'parroquia'         => 'required',
+            //     'zona'              => 'required',
+            //     'junta_no'          => 'required',
+            //     'voters'            => 'required',
 
-            ]);
-            if ($validator->fails()) {
-                // dd('stop');
-                return response()->json(['errors' => $validator->errors()->all()]);
-            } else {
-
+            // ]);
+            // if ($validator->fails()) {
+            //     // dd('stop');
+            //     return response()->json(['errors' => $validator->errors()->all()]);
+            // } else {
+                
                 if ($request->has('provincia')) {
-                    $query .= " and provincia =  '$request->provincia'";
+                    if($request['provincia'] == 'null')
+                    {
+                        // $query .= " or  provincia =  '$request->provincia'";
+                        $request['provincia'] = null; 
+
+                    }else{
+                    $query .= " and  provincia =  '$request->provincia'";
+
+                    }
                 }
                 if ($request->has('canton')) {
-                    $query .= " and canton =  '$request->canton'";
+                    if($request['canton'] == 'null')
+                    {
+                        // $query .= " or  canton =  '$request->canton'";
+                        $request['canton'] = null; 
+   
+                    }
+                    else{
+                        $query .= " and canton =  '$request->canton'";
+                    }
                 }
                 if ($request->has('parroquia')) {
-                    $query .= " and parroquia =  '$request->parroquia'";
+                    if($request['parroquia'] == 'null')
+                    {
+                        // $query .= " or  parroquia =  '$request->parroquia'";
+                    }
+                    else{
+                        $query .= " and parroquia =  '$request->parroquia'";
+                    }
+
                 }
                 if ($request->has('circun')) {
+                    if($request['circun'] == 'null')
+                    {
+                        $request['circun'] = null;   
+                    }else{
                     $query .= " and Circun =  '$request->circun'";
+
+                    }
                 }
                 if ($request->has('zona')) {
-                    $query .= " and zona =  '$request->zona'";
+                    if($request['zona'] == 'null')
+                    {
+                        $request['zona'] = null;   
+                    }else{
+                        $query .= " and zona =  '$request->zona'";
+
+                    }
                 }
                 if ($request->has('junta_no')) {
+                    if(empty($request['junta_no']))
+                    {
+                        $request['junta_no'] = null;   
+                    }else{
                     $query .= " and junta_no =  '$request->junta_no'";
+
+                    }   
                 }
                 if ($request->has('voters')) {
+                    if(empty($request['voters']))
+                    {
+                        $request['voters'] = null;   
+                    }else{
                     $query .= " and voters =  '$request->voters'";
-                }
 
-                $systemCandidates = DB::select('select * from electiondetails where 1=1 and  election_id = ' . session()->get('electionId') . $query);
+                    }
+                }
+                // dd($query);
+                $systemCandidates = DB::select('select * from electiondetails where 1=1 ' . $query . 'and  election_id = ' . session()->get('electionId'));
                 if (empty($systemCandidates)) {
                     return response()->json([
                         'result' => 'fail',
@@ -86,7 +134,7 @@ class InviteController extends Controller
                 return response()->json([
                     'data' => $systemCandidates
                 ]);
-            }
+            // }
         } else {
             $getSTatVal = Electionsinformation::select(\DB::raw("DISTINCT(state_name)"))->get();
             if (!empty($id)) {
@@ -109,31 +157,60 @@ class InviteController extends Controller
             // dd($request->all());
             $data = $request->all();
             // dd($data);
-            $validator = Validator::make($data, [
-                'Position'         => 'required',
-                'provincia'            => 'required',
-                'canton'             => 'required',
-                'parroquia'        => 'required',
+            // $validator = Validator::make($data, [
+            //     'Position'         => 'required',
+            //     'provincia'            => 'required',
+            //     'canton'             => 'required',
+            //     'parroquia'        => 'required',
 
-            ]);
-            if ($validator->fails()) {
-                // dd('stop');
-                return response()->json(['errors' => $validator->errors()->all()]);
-            } else {
+            // ]);
+            // if ($validator->fails()) {
+            //     // dd('stop');
+            //     return response()->json(['errors' => $validator->errors()->all()]);
+            // } else {
 
                 if ($request->has('Position')) {
-                    $query .= " and position =  '$request->Position'";
+                    if($request['Position'] == 'null')
+                    {
+                        // $query .= " or  provincia =  '$request->provincia'";
+                        $request['Position'] = null; 
+
+                    }else{
+                        $query .= " and position =  '$request->Position'";
+                    }
                 }
                 if ($request->has('provincia')) {
-                    $query .= " and state =  '$request->provincia'";
+                    if($request['provincia'] == 'null')
+                    {
+                        // $query .= " or  provincia =  '$request->provincia'";
+                        $request['provincia'] = null; 
+
+                    }else{
+                        $query .= " and state =  '$request->provincia'";
+                    }
                 }
                 if ($request->has('canton')) {
-                    $query .= " and city =  '$request->canton'";
+                    if($request['canton'] == 'null')
+                    {
+                        // $query .= " or  provincia =  '$request->provincia'";
+                        $request['canton'] = null; 
+
+                    }else{
+                        $query .= " and city =  '$request->canton'";
+                    }
                 }
                 if ($request->has('parroquia')) {
-                    $query .= " and parroquia =  '$request->parroquia'";
+                    if($request['parroquia'] == 'null')
+                    {
+                        // $query .= " or  provincia =  '$request->provincia'";
+                        $request['parroquia'] = null; 
+
+                    }else{
+                        $query .= " and parroquia =  '$request->parroquia'";
+                    }
                 }
-                $systemCandidates = DB::select('select * from system_election_candidates where 1=1 ' . $query);
+                // dd($query);
+                $systemCandidates = DB::select('select * from system_election_candidates where 1=1 ' . $query . 'and  election_id = ' . session()->get('electionId'));
                 if(empty($systemCandidates))
                 {
                     return response()->json([
@@ -144,7 +221,7 @@ class InviteController extends Controller
                     return response()->json([
                         'data' => $systemCandidates
                     ]);
-            }
+            // }
         } else {
             if (!empty($id)) {
                 $this->getElectionDetail($id);
@@ -159,22 +236,39 @@ class InviteController extends Controller
         if ($request->param == '1') {
             $query = '';
             $data = $request->all();
-            $validator = Validator::make($data, [
-                'NameOfPArty'         => 'required',
-                'Level'            => 'required',
-            ]);
-            if ($validator->fails()) {
-                // dd('stop');
-                return response()->json(['errors' => $validator->errors()->all()]);
-            } else {
+            // dd($data);
+            // $validator = Validator::make($data, [
+            //     'NameOfPArty'         => 'required',
+            //     'Level'            => 'required',
+            // ]);
+            // if ($validator->fails()) {
+            //     // dd('stop');
+            //     return response()->json(['errors' => $validator->errors()->all()]);
+            // } else {
 
                 if ($request->has('NameOfPArty')) {
-                    $query .= " and party_name =  '$request->NameOfPArty'";
+                    if($request['NameOfPArty'] == 'null')
+                    {
+                        $request['NameOfPArty'] = null; 
+
+                    }else{
+                        $query .= " and party_name =  '$request->NameOfPArty'";
+
+                    }
                 }
                 if ($request->has('Level')) {
-                    $query .= " and party_level =  '$request->Level'";
+                    if($request['Level'] == 'null')
+                    {
+                        $request['Level'] = null; 
+
+                    }else{
+                        $query .= " and party_level =  '$request->Level'";
+
+
+                    }
                 }
-                $political_party = DB::select('select * from political_party where 1=1 and  election_id = ' . session()->get('electionId') . $query);
+                // dd($query);
+                $political_party = DB::select('select * from political_party where 1=1  ' . $query . 'and  election_id = ' . session()->get('electionId'));
                 if(empty($political_party))
                 {
                     return response()->json([
@@ -185,7 +279,7 @@ class InviteController extends Controller
                     return response()->json([
                         'data' => $political_party
                     ]);
-            }
+            // }
         } else {
             if (!empty($id)) {
                 $this->getElectionDetail($id);

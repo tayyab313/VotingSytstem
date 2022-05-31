@@ -84,7 +84,7 @@
     <section class="mt-3">
         <div class="container-fluid splitting_div">
             <div class="row justify-centent-evenly">
-                <div class="col-lg-8 col-md-12 col-sm-12">
+                <div class="col-lg-10 col-md-10 col-sm-12">
                     <div class="container-fluid d-flex justify-content-between">
                         <p>Graficos</p>
                         <div>
@@ -151,11 +151,11 @@
                        
                     </div>
                 </div>
-                <div class="col-lg-4 col-md-4 col-sm-12">
+                <div class="col-lg-2 col-md-2 col-sm-12">
                     <div class="container-fluid d-flex justify-content-between" style="margin-top:11px;">
                         <h6>Documents</h6>
                     </div>
-                    <div class="table_div container-fluid document_div">
+                    <div class="card container-fluid document_div">
 
                     <canvas id="document_chart"></canvas>
 
@@ -166,7 +166,7 @@
                     <div class="container-fluid d-flex justify-content-between">
                         <h6>Voters</h6>
                     </div>
-                    <div class="table_div container-fluid voters_div" >
+                    <div class="card container-fluid voters_div" >
 
                         <canvas id="voters_chart"></canvas>
 
@@ -179,7 +179,7 @@
                     <div class="container-fluid d-flex justify-content-between">
                         <h6>Votes</h6>
                     </div>
-                    <div class="table_div container-fluid  votes_div" >
+                    <div class="card container-fluid  votes_div" >
 
                     <canvas id="votes_chart"></canvas>
 

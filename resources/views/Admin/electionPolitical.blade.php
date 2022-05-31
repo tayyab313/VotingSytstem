@@ -102,10 +102,12 @@
     <!-- Modal content-->
     <div class="modal-content">
       <div class="modal-header">
-        <h4 class="modal-title">Upload Candidate</h4>
+        <h4 class="modal-title">Upload Political Party</h4>
 
         <button type="button" class="close" data-dismiss="modal">&times;</button>
       </div>
+      <div class="alert alert-danger mx-auto" style="width: 97%;">Duplicate Data will be  Ignored by the System Automatically</div>
+
       <div class="modal-body">
         <!-- Form -->
         <form method='post' action="{{ route('importElectionPPoliticalParty') }}" enctype="multipart/form-data">
@@ -138,7 +140,7 @@
               <div class="form-group col-12">
                 <label for="NameOfPArty" class="">Name of Party</label>
                 <select id="NameOfPArty" name="NameOfPArty" class="form-control">
-                  <option disabled selected>Choose...</option>
+                  <option value='null' selected>Choose...</option>
                   @foreach ($PoliticalParty as $party)
                     <option value="{{$party['party_name']}}">{{$party['party_name']}}</option>
                   @endforeach
@@ -149,11 +151,12 @@
               <div class="form-group col-12">
                 <label for="Level" class="">Level</label>
                 <select id="Level" name="Level" class="form-control">
-                  <option disabled selected>Choose...</option>
+                  <option value='null'  selected>Choose...</option>
                   <!-- <option value="TownShip">TownShip</option> -->
-                  <option value="1">1</option>
-                  <option value="2">2</option>
-                  <option value="3">3</option>
+                  <option value="National">National</option>
+                  <option value="City">City</option>
+                  <option value="State">State</option>
+                  <option value="Paroquia">Paroquia</option>
                 </select>
               </div>
             </div>
@@ -203,9 +206,10 @@
                                     <label for="level">Level</label>
                                     <select id="party_level" name="party_level" class="form-control">
                                         <option selected="true" disabled="disabled">Choose Level of Political Party</option>
-                                        <option value="1">Level One</option>
-                                        <option value="2">Level two</option>
-                                        <option value="3">Level Three</option>
+                                        <option value="National">National</option>
+                                        <option value="City">City</option>
+                                        <option value="State">State</option>
+                                        <option value="Paroquia">Paroquia</option>
                                     </select>
                                 </div>
                             </div>
