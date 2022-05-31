@@ -732,7 +732,7 @@ table.dataTable tfoot th {
 }
 .menu_div .dropdown-item
 {
-    width :unset !important;
+    /* width :unset !important; */
     padding: 6px !important;
 }
 .btn_group
