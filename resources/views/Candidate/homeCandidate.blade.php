@@ -17,11 +17,12 @@
                   <div class="form-group col-12">
                     <label for="inputState" class="font-weight-bold">Position</label>
                     <select id="position" name ="position" class="form-control">
-                      <option selected disabled>Choose...</option>
-                      @foreach ($positons as $positon)
+                      <option selected value="null">Choose...</option>
+                      <option selected value='{{$getUserPosition}}'>{{$getUserPosition}}</option>
+                      <!-- @foreach ($positons as $positon)
                         <option value="{{$positon->position_val}}">{{$positon->position_val}}</option>
                         
-                      @endforeach
+                      @endforeach -->
                      
                     </select>
                   </div>
@@ -89,9 +90,9 @@
                     <label for="circun" class="font-weight-bold">Circunscripcion</label>
                     <select id="circun" name ="circun" class="form-control">
                       <option selected disabled>Choose...</option>
-                      <option value="U">U</option>
-                      <option value="R">R</option>
-                      <option value="E">E</option>
+                      <option value="U">URBANO</option>
+                      <option value="R">RURAL</option>
+                      <option value="E">EXTERIOR</option>
                     </select>
                     @error('circun')
                     <span class="text-danger" role="alert">
@@ -141,7 +142,7 @@ $(document).ready(function(){
         },
         success: function(result) {
           // $.LoadingOverlay("hide");
-          html = "";
+          var html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.city_name +'">' + value.city_name +'</option>';
             });
@@ -170,7 +171,7 @@ $(document).ready(function(){
         },
         success: function(result) {
            // $.LoadingOverlay("hide");
-            html = "";
+           var html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.parroquia_name +'">' + value.parroquia_name +'</option>';
             });
@@ -202,7 +203,7 @@ $(document).ready(function(){
         success: function(result) {
            // $.LoadingOverlay("hide");
            console.log(result.data[0].zone_name);
-           var html = "";
+           var html ='<option value="null">Choose...</option>';
            if(result.data[0].zone_name == 'null' || result.data[0].zone_name == null)
            {
              console.log('inside if ');
@@ -252,18 +253,20 @@ $(document).ready(function(){
         },
         success: function(result) {
            // $.LoadingOverlay("hide");
-           var femaleVoter = (result.data[0].female_voters) ?result.data[0].female_voters : null;
-           var MaleVoter = result.data[0].male_voters;
-           var html = "";
+           var femaleVoter = (result.data[0].female_tables) ?result.data[0].female_tables : null;
+           var MaleVoter = result.data[0].male_tables;
+           var html ='<option value="null">Choose...</option>';
            for (let i = 1; i <= femaleVoter; i++) {
                 html += '<option  value="'+ i+'F'+'">' + i+'F' +'</option>';
             }
+            $('select[name=junta_no]').empty();
             $('select[name=junta_no]').append(html);
 
-          var Malehtml = "";
+          var Malehtml ='';
            for (let i = 1; i <= MaleVoter; i++) {
               Malehtml += '<option  value="'+ i+'M'+'">' + i+'M' +'</option>';
             }
+            // $('select[name=junta_no]').empty();
             $('select[name=junta_no]').append(Malehtml);
             // $.each(result.data, function( index, value ) {
             // });

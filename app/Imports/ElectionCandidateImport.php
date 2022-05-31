@@ -11,8 +11,7 @@ use Maatwebsite\Excel\Validators\Failure;
 
 use Mail;
 use Auth;
-class ElectionCandidateImport implements ToModel, WithHeadingRow, WithValidation,
-SkipsOnFailure
+class ElectionCandidateImport implements ToModel, WithHeadingRow
 {
     /**
     * @param array $row
@@ -23,6 +22,10 @@ SkipsOnFailure
     {
         // dd($row);
         // $this->mailToCandiddate($row['email'],$row['name']);
+        $useData  = SystemElectionCandidate::where(['email'=>$row['email'],'election_id'=>session()->get('electionId')])->first();
+        // dd($useData);
+        if($useData ==null || empty($useData))
+        {
         return new SystemElectionCandidate([
             'name'          => $row['name'],
             'email'         => $row['email'], 
@@ -33,9 +36,10 @@ SkipsOnFailure
             'parroquia'     => $row['parroquia'], 
             'political_party'     => $row['political_party'], 
             // 'img_pol_party' => $row['image_political_party'], 
-            'password'      => '123123123',
+            'password' => '$2y$10$cvYnUuEw4IDGUvWzX4pmw.nJPpiL66smo.J.HUByLbjN1.AphCpL2',
             'election_id'   => session()->get('electionId'),
         ]);
+    }
         
         
     }
@@ -55,14 +59,14 @@ SkipsOnFailure
             $messages->subject('Dear Candidate Welcome to our Voto Control system');
         });
     }
-    public function rules():array
-    {
-        return [
-            '*.email' => ['email', 'unique:system_election_candidates,email']
-        ];
-    }
-    public function onFailure(Failure ...$failures)
-    {
+    // public function rules():array
+    // {
+    //     return [
+    //         '*.email' => ['email', 'unique:system_election_candidates,email']
+    //     ];
+    // }
+    // public function onFailure(Failure ...$failures)
+    // {
         
-    }
+    // }
 }

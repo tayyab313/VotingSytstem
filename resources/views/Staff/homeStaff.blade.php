@@ -34,10 +34,10 @@
               @foreach($docs as $doc)
               <tr>
                 <th scope="row"><a href="{{ route('viewDocument',['id' => Crypt::encrypt($doc->id)])}}" class="election_link">{{ $doc->doc_name }}</a></th>
-                @if ( $doc['valid_votes']+$doc['null_votes']+$doc['blank_votes'] < $doc['total_votes'])
+                @if ( $doc['valid_votes']+$doc['null_votes']+$doc['blank_votes'] <= $doc['total_votes'])
                 <td><span class="badge badge-pill success_badge">Valid</span></td>
                 @endif
-                @if ($doc['valid_votes']+$doc['null_votes']+$doc['blank_votes'] >= $doc['total_votes'])
+                @if ($doc['valid_votes']+$doc['null_votes']+$doc['blank_votes'] > $doc['total_votes'])
                 <td><span class="badge badge-pill danger_badge">In Valid</span></td>
                 @endif
                 <td>{{ date("g:i a", strtotime($doc->doc_start_time))  }}</td>

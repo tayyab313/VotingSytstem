@@ -46,7 +46,7 @@ class InformationController extends Controller
     public function getJuntaValue(Request $request)
     {
         $data = $request->all();
-        $getJuntaVal = Electionsinformation::select(\DB::raw("DISTINCT male_voters,female_voters"))->where([
+        $getJuntaVal = Electionsinformation::select(\DB::raw("DISTINCT male_tables,female_tables"))->where([
             'state_name'=>isset($data['getValueState'])?$data['getValueState']:null,
             'city_name'=>isset($data['getValueCanton'])?$data['getValueCanton']:null,
             'parroquia_name'=>isset($data['getValueparroquia'])?$data['getValueparroquia']:null,

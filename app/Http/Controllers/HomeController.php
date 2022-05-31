@@ -7,6 +7,7 @@ use Auth;
 use App\Models\Position;
 use App\Models\Election;
 use App\Models\Document;
+use App\Models\User;
 use App\Models\Electionsinformation;
 use DB;
 class HomeController extends Controller
@@ -33,9 +34,11 @@ class HomeController extends Controller
         {
             $getSTatVal = Electionsinformation::select(\DB::raw("DISTINCT(state_name)"))->get();
             $positons = Position::all();
+            $user = User::where('id',Auth::user()->id)->first();
+            $getUserPosition = $user->position;
             // dd($position);
             // $getSTatVal = DB::table('')
-            return view('Candidate.homeCandidate',compact('getSTatVal','positons'));
+            return view('Candidate.homeCandidate',compact('getSTatVal','positons','getUserPosition'));
 
         }else if(Auth::user()->role == 'Staff')
         {
