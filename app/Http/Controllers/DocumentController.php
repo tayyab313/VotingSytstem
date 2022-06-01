@@ -13,6 +13,7 @@ use Auth;
 use DB;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Validation\Validator;
 
 class DocumentController extends Controller
@@ -32,10 +33,6 @@ class DocumentController extends Controller
     public function uploadDocumentsave(Request $request)
     {
 
-        //  dd($request->all());
-        //  $candi = 'candidate_2';
-        //  dd($request->$candi[1]);
-
         $request->validate([
             'doc_name' => 'required',
             'position' => 'required',
@@ -53,24 +50,25 @@ class DocumentController extends Controller
             'comments' => 'required',
             'file' => 'required|mimes:pdf,xlx,csv|max:2048'
         ]);
-        // mimes:csv,txt,xlx,xls,pdf
-        // $request->validate([
-        //     'files' => 'required',
-        //     'files.*' => 'required|mimes:pdf,xlx,csv|max:2048',
-        // ]);
 
-        // $files = [];
-        // if($request->hasfile('filenames'))
-        //  {
-        //     foreach($request->file('filenames') as $file)
-        //     {
-        //         $name = time().rand(1,100).'.'.$file->extension();
-        //         $file->move(public_path('doc_images'), $name);  
-        //         $files[] = $name;  
-        //     }
-        //  }
+        $files = [];
+        if($request->hasfile('document_upload_Images'))
+         {
+            foreach($request->file('document_upload_Images') as $file)
+            {
+                // $file = $request->document_upload_Images;
+                $filenameWithExt = $file->getClientOriginalName();
+                $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                $firstextension = $file->getClientOriginalExtension();
+                $name = $filename.'_'.time().rand(1,100).'.'.$firstextension;
+                $file->move(public_path('doc_images'), $name);
+                $files[] = $name;  
 
-        // dd($files);
+            }
+         }
+
+
+
         // if ($validator->fails())
         // {
         //     return response()->json(['errors'=>$validator->errors()->all()]);
@@ -101,13 +99,23 @@ class DocumentController extends Controller
             'added_by' => Auth::user()->id,
             'status' => 'active',
             'election' => empty($electionID->id)? date('Y'): $electionID->id,
-            'total_votes' => $request->total_votes,
+            'total_votes' => $request->valid_votes + $request->blank_votes + $request->null_votes,
             'file' => $name
         ]);
 
 
 
         $doc_id = $doc->id;
+        $array = array();
+        for($i=0;$i<count($files);$i++)
+        {
+            $array[] = array(
+                'document_id' => $doc_id,
+                'file_name' => $files[$i]
+            );
+        }
+        DB::table('documentfiles')->insert($array);
+
         if ($request->has('total_candidates')) {
             $total_candidates = $request->total_candidates;
             for ($i = 1; $i <= $total_candidates; $i++) {
@@ -121,7 +129,6 @@ class DocumentController extends Controller
                 ]);
             }
         }
-        // dd($doc_id);
         return redirect()->route('home')->with('message', 'Document is successfully Uploaded');
         // return view('Staff.uploadDocument');
     }
@@ -236,7 +243,7 @@ class DocumentController extends Controller
         $id_org = \Crypt::decrypt($id);
         $doc = Document::find($id_org);
         // dd($id_org);
-        $files = Files::where('document_id', $id_org)->first();
+        $files = Files::where('document_id', $id_org)->get();
         // dd($files);
         $getCandidateNameAndVOte = DB::table('electioncandidate')->where('document_id', $id_org)->get();
         // dd($doc,$files,$getCandidateNameAndVOte);
@@ -295,7 +302,6 @@ class DocumentController extends Controller
     public function updateDocument(Request $request)
     {
         $data = $request->all();
-        // dd($data);
         $request->validate([
             'doc_name' => 'required',
             'position' => 'required',
@@ -331,28 +337,6 @@ class DocumentController extends Controller
             $name = time() . rand(1, 100) . '.' . $request->file->extension();
             $request->file->move(public_path('doc_images'), $name);
         }
-      
-
-
-
-        // $getFileName = DB::table('document')->where('document_id', $data['id'])->first();
-        // $getOldFileName = isset($getFileName->file_name) ? $getFileName->file_name : null;
-        // if ($request->hasfile('file')) {
-        //     $path = public_path()."/doc_images/".$getOldFileName;
-        //     if (file_exists($path)) { 
-        //         // dd($getOldFileName);
-        //         unlink($path);
-        //     }
-        //     // dd($data,'sss',$getOldFileName);
-        //     $file = $data['file'];
-        //     $filenameWithExt = $file->getClientOriginalName();
-        //     $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
-        //     $firstextension = $file->getClientOriginalExtension();
-        //     $getOldFileName = $filename . '_' . time() . rand(1, 100) . '.' . $firstextension;
-        //     $request->file->move(public_path('doc_images'), $getOldFileName);
-        //      DB::table('documentfiles')->where('document_id', $data['id'])->update(['file_name' =>$getOldFileName]);
-        // }
-        // dd($data);
         $update_doc = Document::where('id', $data['id'])->update(
             [
                 'doc_name' => $request->doc_name,
@@ -376,11 +360,7 @@ class DocumentController extends Controller
                 'file' => $name
             ]
         );
-        // dd($update_doc);
-        // $update_doc = $data['id'];
-            // for ($i = 1; $i <= count($data['candidate_data']); $i++) {
                 $deleted = DB::table('electioncandidate')->where('document_id', $data['id'])->delete();
-                // dd($data);
                 foreach($data['candidate_data'] as $CanData)
                 {
                     ElectionCandidate::create([
@@ -391,11 +371,31 @@ class DocumentController extends Controller
                             'status' => 'active'
                         ]);
                 }
+                $files = [];
+                if($request->hasfile('document_upload_Images'))
+                 {
+                    foreach($request->file('document_upload_Images') as $file)
+                    {
+                        // $file = $request->document_upload_Images;
+                        $filenameWithExt = $file->getClientOriginalName();
+                        $filename = pathinfo($filenameWithExt, PATHINFO_FILENAME);
+                        $firstextension = $file->getClientOriginalExtension();
+                        $name = $filename.'_'.time().rand(1,100).'.'.$firstextension;
+                        $file->move(public_path('doc_images'), $name);
+                        $files[] = $name;  
+                
+                    }
+                 }
+                 $array = array();
+                        for($i=0;$i<count($files);$i++)
+                        {
+                            $array[] = array(
+                                'document_id' => $data['id'],
+                                'file_name' => $files[$i]
+                            );
+                        }
+                DB::table('documentfiles')->insert($array);
         return redirect()->route('home')->with('message', 'Document is updated successfully');
-        // return view('Staff.uploadDocument');
-    // }
-    // dd('sop');
-
 }
 
 
@@ -405,6 +405,7 @@ class DocumentController extends Controller
         $id_org = \Crypt::decrypt($id);
         $doc = Document::find($id_org);
         $files = Files::where('document_id', $id_org)->get();
+        // dd($files);
         $candidates = ElectionCandidate::where('document_id', $id_org)->get();
         // dd($doc,$files,$candidate);
 
@@ -417,5 +418,13 @@ class DocumentController extends Controller
         DB::table('documentfiles')->where('document_id', $data['id'])->delete();
         DB::table('electioncandidate')->where('document_id', $data['id'])->delete();
         return response()->json(['success'=>'Document is Deleted Successfully']);
+    }
+    public function DeleteDocImage(Request $request)
+    {
+        $data = $request->all();
+            $path = public_path()."/doc_images/".$data['getImagePath'];
+            unlink($path);
+        DB::table('documentfiles')->where('id', $data['getImageId'])->delete();
+        return response()->json(['success'=>'Document Image is Deleted Successfully']);
     }
 }

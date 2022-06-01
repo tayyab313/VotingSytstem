@@ -96,9 +96,9 @@
                                     <select id="circun" class="form-control" name="circun">
                                         <option disabled selected >Choose...</option>
                                         <!-- <option value="circun">Circun</option> -->
-                                        <option value="U">URBANO</option>
-                                        <option value="R">RURAL</option>
-                                        <option value="E">EXTERIOR</option>
+                                        <option value="U">U</option>
+                                        <option value="R">R</option>
+                                        <option value="E">E</option>
                                     </select>
                                     @error('circun')
                                         <span class="text-danger" role="alert">
@@ -248,7 +248,7 @@
                                 </div>
                             </div>
                             <div class="form-row mt-3 d-flex flex-row justify-content-between">
-                                <div class="form-group  Drag_drop_file w-100">
+                                <div class="form-group  Drag_drop_file">
                                     <img src="images/DropImage.png">
                                     <p>Upload your document file here</p>
                                     <input type="file" class="form-control d-none" id="file" name="file">
@@ -258,9 +258,22 @@
                                         </span>
                                      @enderror
                                 </div>
+                                <div class="form-group  Scan_file">
+                                    <img src="{{asset('images/Camera.png')}}">
+                                    <p>Scan through camera / upload Images</p>
+                                    
+                                </div>
                                 
                               
                             </div>
+                            <!-- <form action="" method="post" enctype="multipart/form-data">
+                                {{ csrf_field() }} -->
+                                <input type="file" class="latest_input d-none form-control my-2" id="document_upload_Images" name="document_upload_Images[]" multiple/>
+
+                                <!-- <input type="submit" class="btn btn-success" name='submitImage' value="Upload Image"/> -->
+                            <!-- </form> -->
+                            <br/>
+                            <div id="latest_image_preview"></div>
                       
                     </div>
                 </div>
@@ -333,6 +346,23 @@
 
 
 $(document).ready(function(){
+    $('.Scan_file').click(function(e){
+        e.stopPropagation;
+        $('.latest_input[type=file]').click();
+    });
+    $("#document_upload_Images").change(function(){        
+           $('#latest_image_preview').html("");        
+           var total_file=document.getElementById("document_upload_Images").files.length;    
+           if(total_file >= 8)
+           {
+               $('#latest_image_preview').addClass('Scrollable_div');
+           }    
+           for(var i=0;i<total_file;i++)        
+           {   
+            $('#latest_image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"'>");        
+           }
+        
+        });
     $(".Drag_drop_file").click(function () {
     $("#file")[0].click();
 });
@@ -539,7 +569,7 @@ $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[nam
         },
         success: function(result) {
           // $.LoadingOverlay("hide");
-          html = "";
+           var html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.city_name +'">' + value.city_name +'</option>';
             });
@@ -568,7 +598,7 @@ $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[nam
         },
         success: function(result) {
            // $.LoadingOverlay("hide");
-            html = "";
+           var html ='<option value="null">Choose...</option>';
             $.each(result.data, function( index, value ) {
                 html += '<option  value="'+ value.parroquia_name +'">' + value.parroquia_name +'</option>';
             });
@@ -600,7 +630,7 @@ $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[nam
         success: function(result) {
            // $.LoadingOverlay("hide");
            console.log(result.data[0].zone_name);
-           var html = "";
+           var  html ='<option value="null">Choose...</option>';
            if(result.data[0].zone_name == 'null' || result.data[0].zone_name == null)
            {
              console.log('inside if ');
@@ -650,15 +680,17 @@ $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[nam
         },
         success: function(result) {
            // $.LoadingOverlay("hide");
-           var femaleVoter = (result.data[0].female_voters) ?result.data[0].female_voters : null;
-           var MaleVoter = result.data[0].male_voters;
-           var html = "";
+           console.log(result);
+           var femaleVoter = (result.data[0].female_tables) ?result.data[0].female_tables : null;
+           var MaleVoter = result.data[0].male_tables;
+           var  html ='<option value="null">Choose...</option>';
            for (let i = 1; i <= femaleVoter; i++) {
                 html += '<option  value="'+ i+'F'+'">' + i+'F' +'</option>';
             }
+            $('select[name=junta_no]').empty();
             $('select[name=junta_no]').append(html);
 
-          var Malehtml = "";
+          var Malehtml ='';
            for (let i = 1; i <= MaleVoter; i++) {
               Malehtml += '<option  value="'+ i+'M'+'">' + i+'M' +'</option>';
             }

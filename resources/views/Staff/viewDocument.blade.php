@@ -42,6 +42,18 @@
                     <div class="table_div container-fluid">
                         <embed src="{{asset('doc_images/'.$doc->file.'')}}" type="application/pdf" width="555px" height="500px"/>
                     </div>
+                    <!-- <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel"> -->
+                        <!-- <div class="carousel-inner"> -->
+                        <div id="latest_image_preview" style="width: 95%; margin-left: 13px;margin-bottom: 18px;overflow-x:scroll;display:flex;">
+
+                            @foreach ($files as $file)
+                                <!-- <div class="carousel-item active"> -->
+                                    <img class="doc_images" style="width:75px;height:92px;"  src="{{ asset("doc_images/$file->file_name")}}" alt="First slide">
+                            @endforeach
+                            </div>
+
+                        <!-- </div> -->
+                    <!-- </div> -->
                 </div>
                 <div class="col-6 cus_divStyle">
                     <div class="container-fluid d-flex justify-content-between">
@@ -191,6 +203,22 @@
 </div>
 <!-- side modal -->
 
+
+<!-- image modal -->
+<div class="modal fade imagemodalData" id="imagemodal" tabindex="-1"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body" style="display: flex;justify-content: center;">
+        <img src="" id="imagepreview" style="width: 400px; height: 264px;" >
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- emd here -->
 <div class="modal fade amk right from-right delay-200" id="FIlterModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog  modal-dialog modal-dialog-centered m-auto" role="document">
           <div class="modal-content">
@@ -284,5 +312,11 @@
 
 @section('javascript')
 <script type="text/javascript">
+    $(document).ready(()=>{
+        $(".doc_images").on("click", function() {
+            $('#imagepreview').attr('src', $(this).attr('src')); // here asign the image to the modal when the user click the enlarge link
+            $('#imagemodal').modal('show'); // imagemodal is the id attribute assigned to the bootstrap modal, then i use the show function
+            });
+    });
 </script>
 @endsection('javascript')
