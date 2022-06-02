@@ -1,6 +1,31 @@
 @extends('layouts.main')
 
 @section('content')
+<style>
+    div.show-image {
+    position: relative;
+    float:left;
+    margin:5px;
+}
+div.show-image:hover img{
+    opacity:0.5;
+}
+div.show-image:hover a {
+    display: block;
+}
+div.show-image a {
+    position:absolute;
+    display:none;
+}
+div.show-image a.update {
+    top: 9px;
+    left: 19px;
+}
+div.show-image a.delete {
+    top: 9px;
+    left: 64%;
+}
+</style>
 
 <div class="main_content">
             
@@ -250,21 +275,37 @@
                                      @enderror
                                 </div>
                             </div>
-                            <div class="form-row mt-3 d-flex flex-row align-items-center">
+                            <div class="form-row mt-3 d-flex flex-row justify-content-between">
                                 <div class="form-group  Drag_drop_file">
                                     <img src="{{ asset('images/DropImage.png') }}">
                                     <p>Drag / Drop your document file here</p>
                                     <input type="file" class="form-control d-none" id="file" name="file">
 
                                 </div>
+                                <div class="form-group  Scan_file">
+                                    <img src="{{asset('images/Camera.png')}}">
+                                    <p>Scan through camera / upload Images</p>
+                                    
+                                </div>
                                 <div class="ml-3">
-                                <a type="button" class="btn btn-primary" value="View File" @if (!empty($doc->file))
-                                    href="{{asset('doc_images/'.$doc->file.'')}}"
-                                @else
-                                href=""
-                                @endif target="_blank" />View File</a>
+                                    <a type="button" class="btn btn-primary" value="View File" @if (!empty($doc->file))
+                                        href="{{asset('doc_images/'.$doc->file.'')}}"
+                                    @else
+                                    href=""
+                                    @endif target="_blank" />View File</a>
+                                </div>
+                                <div class="ml-3">
+                                    <a type="button" class="btn btn-primary" data-toggle="modal" data-target="#imagemodal">View Images</a>
                                 </div>
                             </div>
+                            <!-- <form action="" method="post" enctype="multipart/form-data">
+                                {{ csrf_field() }} -->
+                                <input type="file" class="latest_input d-none form-control my-2" id="document_upload_Images" name="document_upload_Images[]" multiple/>
+
+                                <!-- <input type="submit" class="btn btn-success" name='submitImage' value="Upload Image"/> -->
+                            <!-- </form> -->
+                            <br/>
+                            <div id="latest_image_preview"></div>
                       <input type="hidden" id="total_candidate" value="{{$total_candidates}}">
                     </div>
                 </div>
@@ -280,10 +321,29 @@
 
         </div>
     </div>
+    <div class="modal fade imagemodalData" id="imagemodal" tabindex="-1"  role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-body" style="justify-content: center; overflow-x:scroll">
+            @foreach ($files as $file)
+            <div class="show-image" data-id='{{$file->id}}'>
+            <img class="doc_images" id="old_image" style="width:75px;height:92px;margin: 0px 11px;" data-id="{{$file->id}}" src="{{ asset("doc_images/$file->file_name")}}" alt="First slide">
+                <a class="update image_view" data-id="{{$file->id}}"  onclick="window.open('{{ asset("doc_images/$file->file_name")}}', '_blank');"><i class="fa fal fa-eye"></i></a>
+                <a class="delete delete_btn" data-doc="{{$file->document_id}}"  data-Image="{{$file->file_name}}" data-id='{{$file->id}}' ><i class="fa far fa-trash-alt"></i></a>
+            </div>
+            @endforeach  
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
     <div id="uploadModal" class="modal fade" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
+
     <div class="modal-content">
       <div class="modal-header">
         <h4 class="modal-title">Add Candidate</h4>
@@ -319,6 +379,63 @@
 <script src="{{asset('js/dropzone.js')}}"></script>
 <script >
             $(document).ready(()=>{
+                $('.Scan_file').click(function(e){
+                    e.stopPropagation;
+                    $('.latest_input[type=file]').click();
+                });
+                $("#document_upload_Images").change(function(){        
+                    $('#latest_image_preview').html("");        
+                    var total_file=document.getElementById("document_upload_Images").files.length;    
+                    if(total_file >= 8)
+                    {
+                        $('#latest_image_preview').addClass('Scrollable_div');
+                    }    
+                    for(var i=0;i<total_file;i++)        
+                    {   
+                        $('#latest_image_preview').append("<img src='"+URL.createObjectURL(event.target.files[i])+"'>");        
+                    }
+                    
+                });
+                $(document).on('click', '.delete_btn', function() {
+                $.LoadingOverlay("show");
+                var getImageId = $(this).attr('data-id');
+                var getDocId = $(this).attr('data-doc');
+                var getImagePath = $(this).attr('data-Image');
+                $.ajax({
+                    type: "POST",
+                    url: "{{ route('DeleteDocImage')}}",
+                    data: {
+                    'getImageId': getImageId,
+                    'getDocId': getDocId,
+                    'getImagePath': getImagePath,
+                    },
+                    success: function(result) {
+                    $.LoadingOverlay("hide");
+                    Swal.fire({
+                        type: 'success',
+                        title: 'Delete!',
+                        text: 'Document Image Delete successfully',
+                        showConfirmButton: false,
+                        timer: 2000
+                    })
+                    $('.show-image[data-id='+getImageId+']').remove();
+                    },
+                    error: function() {
+                    alert("Error");
+                    }
+                });
+                });
+                // $('.image_view').click(function (){
+                //     var image = new Image();
+                    
+                //     var id = $(this).attr('data-id');
+                //     console.log(id);
+                //     image.src = $("#old_image[data-id="+id+"]").attr('src');
+
+                //     var w = window.open("",'_blank');
+                //     w.document.write(image.outerHTML);
+                //     w.document.close(); 
+                // });
                 $(document).on('click','.add_btn',(event)=>{
                     event.preventDefault();
                 //     var form = $('form#addForm')[0]

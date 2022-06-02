@@ -127,6 +127,7 @@ Route::get('/tables/{id?}/{params?}', [App\Http\Controllers\InviteController::cl
 Route::post('/deleteTable', [App\Http\Controllers\InviteController::class, 'deleteTable'])->name('deleteTable');
 Route::post('/electionCandidateDelete', [App\Http\Controllers\electionCandidateController::class, 'electionCandidateDelete'])->name('electionCandidateDelete');
 Route::post('/DocumentDelete', [App\Http\Controllers\DocumentController::class, 'DocumentDelete'])->name('DocumentDelete');
+Route::post('/DeleteDocImage', [App\Http\Controllers\DocumentController::class, 'DeleteDocImage'])->name('DeleteDocImage');
 Route::get('/candidateElection/{id?}/{param?}', [App\Http\Controllers\InviteController::class, 'candidateElection'])->name('candidateElection');
 Route::get('/PPElection/{id?}/{param?}', [App\Http\Controllers\InviteController::class, 'PPElection'])->name('PPElection');
 

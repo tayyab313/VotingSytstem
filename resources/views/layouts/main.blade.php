@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="{{asset('css/bootstrap.min.css')}}">
-    
+    <link type="text/css" rel="stylesheet" href="http://example.com/image-uploader.min.css">
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <link rel="stylesheet" href="{{asset('css/main.css')}}">
     <script src="{{asset('fontawsome/baacebf324.js')}}"></script>

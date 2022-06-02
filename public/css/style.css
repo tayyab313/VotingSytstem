@@ -803,6 +803,27 @@ a:hover
 {
     display: none !important;
 }
+.latest_input[type=file]{
+    display: inline;
+}
+#latest_image_preview{
+    border: 1px solid black;
+    padding: 10px;
+}
+#latest_image_preview img{
+    width: 75px;
+    padding: 5px;
+    height: 87px;
+    border-radius: 12px;
+}
+.Scrollable_div{
+ display: flex;
+ overflow-x: scroll;    
+}
+.imagemodalData
+{
+    padding:0 !important;
+}
 @media (max-width:412px ){
     #listing_heading_button
     {
