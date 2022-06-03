@@ -50,7 +50,6 @@ class HomeController extends Controller
             return view('Staff.homeStaff',compact('docs'));
 
         }else{
-            dd("dsfds");
                 $position = Position::all();
                 $Election = Election::latest('created_at')->get();
                 return view('Admin..homeAdmin',compact('position','Election'));

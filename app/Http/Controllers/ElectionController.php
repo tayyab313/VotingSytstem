@@ -31,13 +31,15 @@ class ElectionController extends Controller
             return response()->json(['errors' => $validator->errors()->all()]);
         }
         else {
+        // dd( json_encode($data['Positions']));
+
                 $election = Election::create([
                     'election_name'     => $data['name_of_election'],
                     'start_date'        => $data['start_date'],
                     'end_date'          => $data['end_date'],
                     'start_time'        => $data['start_time'],
                     'end_time'          => $data['end_time'],
-                    'election_position' => $data['Positions'],
+                    'election_position' => json_encode($data['Positions']),
                     'status'            => 'in-process',
                 ]);
                 // $election->save();

@@ -6,6 +6,14 @@
 <div class="main_content">
         <div class="breadCrumbs">
         <p class="breadCrumbs_heading">Home</p>
+        @if(!empty(session()->has('message')))
+<div class="alert alert-danger alert-dismissible fade show" role="alert" id="success-alert">
+  <strong>Error!</strong> {{ session()->get('message') }}.
+  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+@endif
         </div>
         <div class="form_div_home">
           <h3>Select the Details</h3>

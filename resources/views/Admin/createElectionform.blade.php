@@ -41,7 +41,7 @@
                             <div class="form-row">
                                 <div class="form-group col-12">
                                     <label for="Positions">Positions</label>
-                                    <select id="Positions" name="Positions" class="form-control">
+                                    <select id="Positions" name="Positions[]" class="form-control" multiple="">
                                         <option value="null" >Select</option>
                                         @foreach ($position as $pos)
                                         <option value="{{$pos['position_val']}}">{{$pos['position_val']}}</option>
