@@ -36,24 +36,81 @@ class DataListingController extends Controller
         // dd($request->all());
         $positons = Position::all();
         $getSTatVal = Electionsinformation::select(\DB::raw("DISTINCT(state_name)"))->get();
-        $request->validate([
-            'position' => 'required',
-            'provincia' => 'required',
-            'canton' => 'required',
-            'circun' => 'required',
-            'parroquia' => 'required',
-            'zona' => 'required',
-            'junta_no' => 'required',
-        ]);
+
+        // $request->validate([
+        //     'position' => 'required',
+        //     'provincia' => 'required',
+        //     'canton' => 'required',
+        //     'circun' => 'required',
+        //     'parroquia' => 'required',
+        //     'zona' => 'required',
+        //     'junta_no' => 'required',
+        // ]);
+        
+        
         // get valid votes 
         // get null votes
         // get blank votes
         // get total votes
 
+        // dd($request->all());
+
+
+        $autoQuery = Document::select(\DB::raw("SUM(valid_votes) as valid_votes,SUM(total_votes) as total_votes,SUM(blank_votes) as blank_votes,SUM(null_votes) as null_votes"));
+
+
+    
+         //vracanje rezultata
+
+
+
+
+
 
         // \DB::enableQueryLog(); // Enable query log
-        $matchThese = ['provincia' => $request->provincia, 'canton' => $request->canton,'parroquia' => $request->parroquia,'circun' => $request->circun,'zona' => $request->zona,'junta_no' => $request->junta_no ];
-        $voting_data = Document::select(\DB::raw("SUM(valid_votes) as valid_votes,SUM(total_votes) as total_votes,SUM(blank_votes) as blank_votes,SUM(null_votes) as null_votes"))->where($matchThese)->get();
+        $search = '1=1';
+        if(!empty($request->provincia) && $request->provincia != "null")
+        {
+            $autoQuery->where('provincia',$request->provincia); 
+        //    $search .= " ,provincia => ".$request->provincia;
+        }
+        if(!empty($request->canton) && $request->canton != "null")
+        {
+        //    $search .= " ,canton => ".$request->canton;
+            $autoQuery->where('canton',$request->canton); 
+
+        }
+        if(!empty($request->parroquia) && $request->parroquia != "null")
+        {
+        //    $search .= " ,parroquia => ".$request->parroquia;
+
+        $autoQuery->where('parroquia',$request->parroquia); 
+    }
+        if(!empty($request->circun) && $request->circun != "null")
+        {
+        //    $search .= " ,circun => ".$request->circun;
+           $autoQuery->where('parroquia',$request->circun); 
+        }
+        if(!empty($request->zona) && $request->zona != "null")
+        {
+        //    $search .= " ,zona => ".$request->zona;
+           $autoQuery->where('zona',$request->zona); 
+
+        }
+        if(!empty($request->junta_no) && $request->junta_no != "null")
+        {
+        //    $search .= " ,junta_no => ".$request->junta_no;
+           $autoQuery->where('junta_no',$request->junta_no); 
+
+        }
+        $voting_data = $autoQuery->get();
+
+        // dd($automobili);
+
+        // $matchThese = ['provincia' => $request->provincia, 'canton' => $request->canton,'parroquia' => $request->parroquia,'circun' => $request->circun,'zona' => $request->zona,'junta_no' => $request->junta_no ];
+        // dd($search,$matchThese);
+        // $matchThese = $search;
+        // $voting_data = Document::select(\DB::raw("SUM(valid_votes) as valid_votes,SUM(total_votes) as total_votes,SUM(blank_votes) as blank_votes,SUM(null_votes) as null_votes"))->whereRaw($matchThese)->get();
         // dd(\DB::getQueryLog()); // Show results of log
         // dd($voting_data);
         foreach($voting_data as $vote)
@@ -65,7 +122,44 @@ class DataListingController extends Controller
         }
         // get count of document
         // get ids of document than sort them on the basis of votes all the users
-        $document_ids = Document::select(\DB::raw("id"))->where($matchThese)->get();
+        $document_ids = Document::select(\DB::raw("id"));
+        if(!empty($request->provincia) && $request->provincia != "null")
+        {
+            $document_ids->where('provincia',$request->provincia); 
+        //    $search .= " ,provincia => ".$request->provincia;
+        }
+        if(!empty($request->canton) && $request->canton != "null")
+        {
+        //    $search .= " ,canton => ".$request->canton;
+            $document_ids->where('canton',$request->canton); 
+
+        }
+        if(!empty($request->parroquia) && $request->parroquia != "null")
+        {
+        //    $search .= " ,parroquia => ".$request->parroquia;
+
+        $document_ids->where('parroquia',$request->parroquia); 
+    }
+        if(!empty($request->circun) && $request->circun != "null")
+        {
+        //    $search .= " ,circun => ".$request->circun;
+           $document_ids->where('parroquia',$request->circun); 
+        }
+        if(!empty($request->zona) && $request->zona != "null")
+        {
+        //    $search .= " ,zona => ".$request->zona;
+           $document_ids->where('zona',$request->zona); 
+
+        }
+        if(!empty($request->junta_no) && $request->junta_no != "null")
+        {
+        //    $search .= " ,junta_no => ".$request->junta_no;
+           $document_ids->where('junta_no',$request->junta_no); 
+
+        }
+        $document_ids  = $document_ids->get();
+        //  dd(\DB::getQueryLog()); // Show results of log
+        // dd($document_ids);
         $doc_ids_Arr = array();
         foreach($document_ids as $doc_id)
         {
@@ -109,6 +203,10 @@ class DataListingController extends Controller
         // dd($graphData);
         $request = $request->all();
 
+        if($document_ids->isEmpty())
+        {
+            return redirect()->back()->with('message','No Data Found against these details');
+        }
         return view('Candidate.DataListing',compact('valid_docs','invalid_docs','doc_ids_Arr','request','graphData','doc_canidates_votes_Arr','doc_canidates_Arr','graph_candidates_name_array','graph_candidates_name_array2','graph_candidates_votes_array','blank_votes','total_votes','null_votes','valid_votes','all_document_candidate','getSTatVal','positons'));
     }
 

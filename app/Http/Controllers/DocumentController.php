@@ -262,7 +262,7 @@ class DocumentController extends Controller
         // dd($request->all());
 
         $electionID = Election::select('id')->latest()->first();
-        
+        // dd($electionID);
 
         // \DB::enableQueryLog(); // Enable query log
         $matchThese = ['provincia' => $request->provincia, 'canton' => $request->canton, 'parroquia' => $request->parroquia, 'circun' => $request->circun, 'zona' => $request->zona, 
