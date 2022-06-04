@@ -125,7 +125,7 @@
                                     timer: 4000
                                     })
                                     setTimeout(() => {
-                                        location.reload();
+                                        location.href = "{{route('home')}}";
                                     }, 2000);
                                 }
                         },

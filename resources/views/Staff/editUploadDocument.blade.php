@@ -46,8 +46,8 @@ div.show-image a.delete {
                                 <div class="form-group col-12">
                                     <label for="position" class="">Position</label>
                                     <select id="position" class="form-control" name="position">
-                                        <option selected>Choose...</option>
-                                        <option {{$doc->position == 'position'? 'selected':''}} value="position">position</option>
+                                        <!-- <option selected>Choose...</option> -->
+                                        <option selected value="{{$doc['position']}}">{{$doc['position']}}</option>
                                     </select>
                                     @error('position')
                                         <span class="text-danger" role="alert">
@@ -61,7 +61,10 @@ div.show-image a.delete {
                                     <label for="provincia" class="">Provinicia</label>
                                     <select id="provincia" class="form-control" name="provincia">
                                         <option selected>Choose...</option>
-                                        <option  {{$doc->provincia =='provincia' ? 'selected': ''}} value="provincia">provincia</option>
+                                        @foreach ($getSTatVal as $StatData)
+                                        <option {{ $StatData->state_name == $doc->provincia ? 'selected' :''}}  value="{{$StatData['state_name']}}">{{$StatData['state_name']}}</option>
+                                        @endforeach
+                                        <!-- <option  {{$doc->provincia =='provincia' ? 'selected': ''}} value="provincia">provincia</option> -->
                                     </select>
                                     @error('provincia')
                                         <span class="text-danger" role="alert">
@@ -72,8 +75,7 @@ div.show-image a.delete {
                                 <div class="form-group col-6">
                                     <label for="canton" class="">Canton</label>
                                     <select id="canton" class="form-control" name="canton">
-                                        <option selected>Choose...</option>
-                                        <option {{$doc->canton == 'canton' ? 'selected' : ''}} value="provincia">provincia</option>
+                                    <option selected value="{{$doc['canton']}}">{{$doc['canton']}}</option>
                                     </select>
                                     @error('canton')
                                         <span class="text-danger" role="alert">
@@ -86,8 +88,7 @@ div.show-image a.delete {
                                 <div class="form-group col-6">
                                     <label for="parroquia" class="">Parroquia</label>
                                     <select id="parroquia" class="form-control" name="parroquia">
-                                        <option selected>Choose...</option>
-                                        <option {{$doc->parroquia == 'parroquia' ? 'selected' : ''}}  value="parroquia">provincia</option>
+                                    <option selected value="{{$doc['parroquia']}}">{{$doc['parroquia']}}</option>
                                     </select>
                                     @error('parroquia')
                                         <span class="text-danger" role="alert">
@@ -96,12 +97,11 @@ div.show-image a.delete {
                                      @enderror
                                 </div>
                                 <div class="form-group col-6">
-                                    <label for="circun" class="">Circunscripcion</label>
-                                    <select id="circun" class="form-control" name="circun">
-                                        <option selected>Choose...</option>
-                                        <option {{$doc->canton == 'canton' ? 'selected' : ''}}  value="circun">Circun</option>
+                                    <label for="zona" class="">Zona</label>
+                                    <select id="zona" class="form-control" name="zona">
+                                    <option selected value="{{$doc['parroquia']}}">{{$doc['parroquia']}}</option>
                                     </select>
-                                    @error('circun')
+                                    @error('zona')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -109,14 +109,22 @@ div.show-image a.delete {
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-6">
-                                    <label for="zona" class="">Zona</label>
-                                    <select id="zona" class="form-control" name="zona">
-                                        <option selected>Choose...</option>
-                                        <option {{$doc->zona == 'zona' ? 'selected' : ''}}  value="zona">Zona</option>
-
+                            <div class="form-group col-6">
+                                    <label for="circun" class="">Circunscripcion</label>
+                                    <select id="circun" class="form-control" name="circun">
+                                        <option selected value="{{$doc['circun']}}">
+                                        @if($doc['circun'] == 'R')
+                                        RURAL
+                                        @endif    
+                                        @if($doc['circun'] == 'U')
+                                        URBANO
+                                        @endif    
+                                        @if($doc['circun'] == 'E')
+                                        EXTERIOR
+                                        @endif    
+                                        </option>
                                     </select>
-                                    @error('zona')
+                                    @error('circun')
                                         <span class="text-danger" role="alert">
                                             <strong>{{ $message }}</strong>
                                         </span>
@@ -125,8 +133,7 @@ div.show-image a.delete {
                                 <div class="form-group col-6">
                                     <label for="junta_no" class="">Junta No.</label>
                                     <select id="junta_no" class="form-control" name="junta_no">
-                                        <option selected>Choose...</option>
-                                        <option {{$doc->junta_no == 'junta_no' ? 'selected' : ''}} value="junta_no">Junta No</option>
+                                        <option selected value="$doc['junta_no']">{{$doc['junta_no']}}</option>
                                     </select>
                                     @error('junta_no')
                                         <span class="text-danger" role="alert">
@@ -288,11 +295,10 @@ div.show-image a.delete {
                                     
                                 </div>
                                 <div class="ml-3">
-                                    <a type="button" class="btn btn-primary" value="View File" @if (!empty($doc->file))
-                                        href="{{asset('doc_images/'.$doc->file.'')}}"
-                                    @else
-                                    href=""
-                                    @endif target="_blank" />View File</a>
+                                    @if(isset($doc->file))
+                                    <a type="button" class="btn btn-primary" value="View File" href="{{asset('doc_images/'.$doc->file.'')}}"
+                                    target="_blank" >View File</a>
+                                    @endif
                                 </div>
                                 <div class="ml-3">
                                     <a type="button" class="btn btn-primary" data-toggle="modal" data-target="#imagemodal">View Images</a>
@@ -377,8 +383,220 @@ div.show-image a.delete {
 
 @section('javascript')
 <script src="{{asset('js/dropzone.js')}}"></script>
-<script >
+<script>
             $(document).ready(()=>{
+                $('select[name=provincia]').on('change', function() {
+                    var getPositionValu = "{{$doc['canton']}}";
+                    var getValueOption = this.value;
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('getcityval')}}",
+                        data: {
+                        'getValueOption': getValueOption
+                        },
+                        success: function(result) {
+                            var selectedCity =  '';
+                            html = '<option value="null">Choose...</option>';
+                            $.each(result.data, function( index, value ) {
+                                if(getPositionValu == value.city_name)
+                                {   
+                                    selectedCity = 'selected';
+
+                                }
+                                html += '<option '+selectedCity+'  value="'+ value.city_name +'">' + value.city_name +'</option>';
+                                selectedCity ='';
+                            });
+                            $('select[name=canton]').html(html);
+                            $('select[name=canton]').removeAttr('disabled');
+
+
+                        },
+                        error: function() {
+                        alert("Error");
+                        }
+                    });
+                });
+                $('select[name=canton]').on('change', function() {
+                    var getPositionValu = "{{$doc['parroquia']}}";
+                    console.log(getPositionValu);
+                    var getValuecity = this.value;
+                    var getValueState = $('select[name=provincia] option:selected').val();
+
+                    // $.LoadingOverlay("show");
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('getparroquiaval')}}",
+                        data: {
+                        'getValuecity': getValuecity,
+                        'getValueState': getValueState,
+                        },
+                        success: function(result) {
+                            var selectedCity =  '';
+                        // $.LoadingOverlay("hide");
+                            html = '<option value="null">Choose...</option>';
+                            
+                            $.each(result.data, function( index, value ) {
+                                if(getPositionValu == value.parroquia_name)
+                                {   
+                                    selectedCity = 'selected';
+
+                                }
+                                html += '<option '+selectedCity+' value="'+ value.parroquia_name +'">' + value.parroquia_name +'</option>';
+                                selectedCity ='';
+                            });
+                            $('select[name=parroquia]').html(html);
+                            $('select[name=parroquia]').removeAttr('disabled');
+
+
+                        },
+                        error: function() {
+                        alert("Error");
+                        }
+                    });
+                });
+                $('select[name=parroquia]').on('change', function() {
+                    var getValueparroquia = this.value;
+                    var getValueState = $('select[name=provincia] option:selected').val();
+                    var getValueCanton = $('select[name=canton] option:selected').val();
+                    var getPositionValu = "{{$doc['zona']}}";
+                    // $.LoadingOverlay("show");
+                    $.ajax({
+                        type: "POST",
+                        url: "{{ route('getZonaValue')}}",
+                        data: {
+                        'getValuecity': getValueCanton,
+                        'getValueState': getValueState,
+                        'getValueparroquia': getValueparroquia,
+                        },
+                        success: function(result) {
+                        // $.LoadingOverlay("hide");
+                        console.log(result.data[0].zone_name);
+                        var selectedCity ='';
+                        if(result.data[0].zone_name == 'null' || result.data[0].zone_name == null)
+                        {
+                            html = "<option  value='null'>Empty</option>";
+                            console.log(html);
+                            $('select[name=zona]').html(html);
+                        }
+                        else{
+                            var html = '<option value="null">Choose...</option>';
+                            $.each(result.data, function( index, value ) {
+                                if(getPositionValu == value.zone_name)
+                                {   
+                                    console.log('inside ifsas ');
+                                    selectedCity = 'selected';
+
+                                }
+                                html += '<option '+selectedCity+' value="'+ value.zone_name +'">' + value.zone_name +'</option>';
+                                selectedCity='';
+                            });
+                            $('select[name=zona]').html(html);
+
+                        }
+
+                            $('select[name=zona]').removeAttr('disabled');
+
+
+                        },
+                        error: function() {
+                        alert("Error");
+                        }
+                    });
+                });
+                $('select[name=zona]').on('change', function() {
+                    $('select[name=circun]').empty();
+                    var UrbanoValue ='';
+                    var RuralValue ='';
+                    var ExteriorValue ='';
+                    var getcicunCurrentValue = "{{$doc['circun']}}";
+                    console.log(getcicunCurrentValue);
+                    if(getcicunCurrentValue =='U')
+                    {
+                        UrbanoValue = 'selected';
+                    }
+                    if(getcicunCurrentValue =='R')
+                    {
+                        RuralValue = 'selected';
+                    }
+                    if(getcicunCurrentValue =='E')
+                    {
+                        ExteriorValue= 'selected';
+                    }
+                    var CircunOPtion = `<option value="null">Choose...</option>
+                                        <option `+UrbanoValue+` value="U">URBANO</option>
+                                        <option `+RuralValue+`  value="R">RURAL</option>
+                                        <option `+ExteriorValue+`  value="E">EXTERIOR</option>`;
+                    $('select[name=circun]').html(CircunOPtion);
+                    // circunValue='';
+                    });
+                    $('select[name=circun]').on('change', function() {
+                        var getValuecircun    = this.value;
+                        var getValueState     = $('select[name=provincia] option:selected').val();
+                        var getValueCanton    = $('select[name=canton] option:selected').val();
+                        var getValueparroquia = $('select[name=parroquia] option:selected').val();
+                        var getValuezona      = $('select[name=zona] option:selected').val();
+                        var junta_no          = "{{$doc['junta_no']}}";
+                        // $.LoadingOverlay("show");
+                        $.ajax({
+                            type: "POST",
+                            url: "{{ route('getJuntaValue')}}",
+                            data: {
+                            'getValuecircun': getValuecircun,
+                            'getValueState': getValueState,
+                            'getValueCanton': getValueCanton,
+                            'getValuezona': getValuezona,
+                            'getValueparroquia': getValueparroquia,
+                            },
+                            success: function(result) {
+                            // $.LoadingOverlay("hide");
+                            if(result.data.length == 0)
+                            {
+                                var htmls ='<option value="null">Empty</option>';
+                                $('select[name=junta_no]').empty();
+                                $('select[name=junta_no]').append(htmls);
+
+                            }
+                            else{
+                            var femaleVal='';
+                            var maleVal='';
+                            var femaleVoter = result.data[0].female_tables;
+                            var MaleVoter = result.data[0].male_tables;
+                            var html ='<option value="null">Choose...</option>';
+                            for (let i = 1; i <= femaleVoter; i++) {
+                                    if(junta_no == i+'F')
+                                    {
+                                        femaleVal ='selected';
+
+                                    }
+                                    html += '<option  '+femaleVal+'value="'+ i+'F'+'">' + i+'F' +'</option>';
+                                    femaleVal='';
+                                }
+                                $('select[name=junta_no]').empty();
+                                $('select[name=junta_no]').append(html);
+
+                            var Malehtml = "";
+                            for (let i = 1; i <= MaleVoter; i++) {
+                                if(junta_no == i+'M')
+                                    {
+                                        maleVal='selected';
+                                    }
+                                Malehtml += '<option  '+maleVal+' value="'+ i+'M'+'">' + i+'M' +'</option>';
+                                maleVal ='';
+                                }
+                                // $('select[name=junta_no]').empty()
+                                $('select[name=junta_no]').append(Malehtml);
+                                // $.each(result.data, function( index, value ) {
+                                // });
+                                $('select[name=junta_no]').removeAttr('disabled');
+                                }
+
+                            },
+                            error: function() {
+                            alert("Error");
+                            }
+                        });
+                        });
+
                 $('.Scan_file').click(function(e){
                     e.stopPropagation;
                     $('.latest_input[type=file]').click();

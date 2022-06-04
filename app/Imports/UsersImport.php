@@ -34,7 +34,7 @@ class UsersImport implements  ToModel,WithHeadingRow
                 'parroquia'    => $row['parroquia'], 
                 'pol_party'    => $row['political_party'], 
                 // 'img_pol_party'    => $row['image_political_party'], 
-                'password' => '$2y$10$cvYnUuEw4IDGUvWzX4pmw.nJPpiL66smo.J.HUByLbjN1.AphCpL2',
+                'password' => '$2y$10$r3vu1A8SGIe0c6zunRqv4.kNcosNJVfIzSVnbq0FNT51ocCFZDMhy',
                 'role' => 'Candidate',
 
             ]);

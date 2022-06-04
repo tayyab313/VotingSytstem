@@ -20,8 +20,8 @@
         
           <button class="btn filter_btn Candidate_btns multi_btn " id="bulk_delete"><i class="fas fa fa-trash-alt"></i> Bulk Delete
           </button>
-          <button class="btn filter_btn Candidate_btns multi_btn"><i class="fa fa-camera mr-1" aria-hidden="true"></i>Upload Picture
-          </button>
+          <!-- <button class="btn filter_btn Candidate_btns multi_btn"><i class="fa fa-camera mr-1" aria-hidden="true"></i>Upload Picture
+          </button> -->
           <button data-toggle="modal" data-target="#uploadModal" class="btn filter_btn Candidate_btns multi_btn"><i class="fa fa-download mr-1" aria-hidden="true"></i> Import
           </button>
           <a href="{{ route('exportCandidate') }}" class="btn filter_btn Candidate_btns multi_btn"><i class="fa fa-upload mr-1" aria-hidden="true"></i>Export

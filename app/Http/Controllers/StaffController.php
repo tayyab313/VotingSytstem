@@ -178,7 +178,7 @@ class StaffController extends Controller
                 'city'          => $data['City'],
                 'parroquia'     => $data['Parroquias'],
                 'role'          => 'Staff',
-                'password'      => '$2y$10$cvYnUuEw4IDGUvWzX4pmw.nJPpiL66smo.J.HUByLbjN1.AphCpL2',
+                'password'      => '$2y$10$r3vu1A8SGIe0c6zunRqv4.kNcosNJVfIzSVnbq0FNT51ocCFZDMhy',
                 'candidate_img' => isset($staff_name) ? $staff_name : null,
             ]);
             // $maildata = [

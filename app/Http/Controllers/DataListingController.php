@@ -50,7 +50,7 @@ class DataListingController extends Controller
         // get blank votes
         // get total votes
 
-        // dd($request->all());
+
         // \DB::enableQueryLog(); // Enable query log
         $matchThese = ['provincia' => $request->provincia, 'canton' => $request->canton,'parroquia' => $request->parroquia,'circun' => $request->circun,'zona' => $request->zona,'junta_no' => $request->junta_no ];
         $voting_data = Document::select(\DB::raw("SUM(valid_votes) as valid_votes,SUM(total_votes) as total_votes,SUM(blank_votes) as blank_votes,SUM(null_votes) as null_votes"))->where($matchThese)->get();
@@ -107,6 +107,8 @@ class DataListingController extends Controller
             array_push($graphData, array('name'=>$doc->candidate_name, 'data'=> array((int)$doc->candidate_votes)));
         }
         // dd($graphData);
+        $request = $request->all();
+
         return view('Candidate.DataListing',compact('valid_docs','invalid_docs','doc_ids_Arr','request','graphData','doc_canidates_votes_Arr','doc_canidates_Arr','graph_candidates_name_array','graph_candidates_name_array2','graph_candidates_votes_array','blank_votes','total_votes','null_votes','valid_votes','all_document_candidate','getSTatVal','positons'));
     }
 

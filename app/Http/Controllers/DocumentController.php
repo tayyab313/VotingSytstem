@@ -6,6 +6,7 @@ use App\Models\Document;
 use App\Models\Files;
 use App\Models\ElectionDetails;
 use App\Models\Election;
+use App\Models\Electionsinformation;
 
 use App\Models\ElectionCandidate;
 use App\Models\SystemElectionCandidate;
@@ -48,7 +49,7 @@ class DocumentController extends Controller
             'doc_start_time' => 'required',
             'doc_end_time' => 'required',
             'comments' => 'required',
-            'file' => 'required|mimes:pdf,xlx,csv|max:2048'
+            // 'file' => 'required|mimes:pdf,xlx,csv|max:2048'
         ]);
 
         $files = [];
@@ -74,9 +75,10 @@ class DocumentController extends Controller
         //     return response()->json(['errors'=>$validator->errors()->all()]);
         // }
 
-
-        $name = time() . rand(1, 100) . '.' . $request->file->extension();
-        $request->file->move(public_path('doc_images'), $name);
+        if($request->hasfile('file')){
+            $name = time() . rand(1, 100) . '.' . $request->file->extension();
+            $request->file->move(public_path('doc_images'), $name);
+        }
 
         // get latest election ID
         $electionID = Election::select('id')->latest()->first();
@@ -100,7 +102,7 @@ class DocumentController extends Controller
             'status' => 'active',
             'election' => empty($electionID->id)? date('Y'): $electionID->id,
             'total_votes' => $request->valid_votes + $request->blank_votes + $request->null_votes,
-            'file' => $name
+            'file' => isset($name) ? $name : null
         ]);
 
 
@@ -248,7 +250,9 @@ class DocumentController extends Controller
         $getCandidateNameAndVOte = DB::table('electioncandidate')->where('document_id', $id_org)->get();
         // dd($doc,$files,$getCandidateNameAndVOte);
         $total_candidates = count($getCandidateNameAndVOte);
-        return view('staff.editUploadDocument', compact('doc', 'files', 'getCandidateNameAndVOte','total_candidates'));
+        $getSTatVal = Electionsinformation::select(\DB::raw("DISTINCT(state_name)"))->get();
+        // dd($doc->toArray(),$getSTatVal->toArray());
+        return view('staff.editUploadDocument', compact('doc', 'files', 'getCandidateNameAndVOte','total_candidates','getSTatVal'));
         // dd($doc);
     }
 

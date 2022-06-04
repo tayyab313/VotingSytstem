@@ -235,7 +235,7 @@
                 <select id="provincia" name="provincia" class="form-control">
                   <option disabled selected>Choose...</option>
                   @foreach ($getSTatVal as $val)
-                      <option value="{{$val['state_name']}}">{{$val['state_name']}}</option>
+                      <option {{ $val->state_name == $request["provincia"] ? 'selected' :''}} value="{{$val['state_name']}}">{{$val['state_name']}}</option>
                       @endforeach
                 </select>
               </div>
@@ -244,10 +244,7 @@
               <div class="form-group col-12">
                 <label for="canton" class="">Canton</label>
                 <select id="canton" name="canton" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="canto">Canto</option>
-                  <option value="cantcao">Cantcao</option>
-                  <option value="canto juanid">Canto juanid</option>
+                <option selected value="{{$request['canton']}}">{{$request['canton']}}</option>
                 </select>
               </div>
             </div>
@@ -255,10 +252,8 @@
               <div class="form-group col-12">
                 <label for="parroquia" class="">Parroquia</label>
                 <select id="parroquia" name="parroquia" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="parroquia">Parroquia</option>
-                  <option value="parroqcacauia">Parroqcacauia</option>
-                  <option value="parroquia junaid">Parroquia junaid</option>
+                <option selected value="{{$request['parroquia']}}">{{$request['parroquia']}}</option>
+
                 </select>
               </div>
             </div>
@@ -266,10 +261,8 @@
             <div class="form-group col-12">
                 <label for="zona" class="">Zona</label>
                 <select id="zona" name="zona" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="zona">Zona</option>
-                  <option value="zoacna">zoacna</option>
-                  <option value="zona junaid">Zona junaid</option>
+                <option selected value="{{$request['zona']}}">{{$request['zona']}}</option>
+
                 </select>
               </div>  
             </div>
@@ -277,10 +270,17 @@
             <div class="form-group col-12">
                 <label for="circun" class="">Circunscripcion</label>
                 <select id="circun" name="circun" class="form-control">
-                  <option disabled selected>Choose...</option>
-                  <option value="U">U</option>
-                  <option value="R">R</option>
-                  <option value="E">E</option>
+                <option selected value="{{$request['circun']}}">
+                    @if($request['circun'] == 'R')
+                    RURAL
+                    @endif    
+                    @if($request['circun'] == 'U')
+                    URBANO
+                    @endif    
+                    @if($request['circun'] == 'E')
+                    EXTERIOR
+                    @endif    
+                </option>
                 </select>
               </div> 
             
@@ -288,7 +288,7 @@
             <div class="form-row">
               <div class="form-group col-12">
                 <label for="junta_no" class="">Junta No</label>
-                <input type="number" class="form-control" id="junta_no" name="junta_no">
+                <input type="text" class="form-control" id="junta_no" name="junta_no" value="{{$request['junta_no']}}">
 
               </div>
             </div>
@@ -776,7 +776,7 @@
     var ctx = document.getElementById("votes_chart").getContext("2d");
     var myChart = new Chart(ctx, config);
     
-    $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[name="circun"],select[name="junta_no"]').attr('disabled','disabled');  
+    // $('select[name="canton"],select[name="parroquia"],select[name="zona"],select[name="circun"],select[name="junta_no"]').attr('disabled','disabled');  
     console.log('sssasas');
     $('select[name=provincia]').on('change', function() {
       console.log('sss');

@@ -30,7 +30,7 @@ class StaffUsersImport implements ToModel, WithHeadingRow
         //         'state'    => $row['state'], 
         //         'city'    => $row['city'], 
         //         'parroquia'    => $row['parroquia'], 
-        //         'password' => '$2y$10$cvYnUuEw4IDGUvWzX4pmw.nJPpiL66smo.J.HUByLbjN1.AphCpL2',
+        //         'password' => '$2y$10$r3vu1A8SGIe0c6zunRqv4.kNcosNJVfIzSVnbq0FNT51ocCFZDMhy',
         //         'role' => 'Staff',
         //               ]);
         //     } 
@@ -46,7 +46,7 @@ class StaffUsersImport implements ToModel, WithHeadingRow
                 'state'    => $row['provincia'], 
                 'city'    => $row['canton'], 
                 'parroquia'    => $row['parroquia'], 
-                'password' => '$2y$10$cvYnUuEw4IDGUvWzX4pmw.nJPpiL66smo.J.HUByLbjN1.AphCpL2',
+                'password' => '$2y$10$r3vu1A8SGIe0c6zunRqv4.kNcosNJVfIzSVnbq0FNT51ocCFZDMhy',
                 'role' => 'Staff',
 
             ]);

@@ -35,10 +35,11 @@ class HomeController extends Controller
             $getSTatVal = Electionsinformation::select(\DB::raw("DISTINCT(state_name)"))->get();
             $positons = Position::all();
             $user = User::where('id',Auth::user()->id)->first();
+            // dd($user->toArray());
             $getUserPosition = $user->position;
             // dd($position);
             // $getSTatVal = DB::table('')
-            return view('Candidate.homeCandidate',compact('getSTatVal','positons','getUserPosition'));
+            return view('Candidate.homeCandidate',compact('getSTatVal','positons','getUserPosition','user'));
 
         }else if(Auth::user()->role == 'Staff')
         {
